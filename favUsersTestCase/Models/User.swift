@@ -18,6 +18,7 @@ struct User: Identifiable, Equatable {
     let profileImageURL: String
     let gender: String
     let nationality: String
+    var isFavorite: Bool = false
 }
 
 // MARK: - API'den gelen ham JSON karşılığı
