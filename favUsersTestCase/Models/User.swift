@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - UI'da kullanılacak data modeli
-struct User: Identifiable, Equatable {
+struct User: Identifiable, Equatable, Codable {
     let id: String
     let fullName: String
     let email: String
