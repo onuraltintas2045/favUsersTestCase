@@ -11,7 +11,7 @@ final class NetworkManager {
     static let shared = NetworkManager()
     private init() {}
 
-    /// RandomUser API’den kullanıcıları çek (escaping closure versiyonu)
+    /// RandomUser API’den kullanıcıları çek
     /// - Parameters:
     ///   - results: Kaç adet kayıt çekilecek (default: 2)
     ///   - nationalities: Ülke kodları (default: ["us","gb","ca"])
@@ -24,21 +24,20 @@ final class NetworkManager {
             return
         }
 
-        // 2) Data task ile network isteği
         URLSession.shared.dataTask(with: url) { data, response, error in
-            // 3) Öncelikle network hatası var mı?
+            
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            // 5) Data varsa decode et
+            
             guard let data = data else {
                 completion(.failure(URLError(.zeroByteResource)))
                 return
             }
+            
             do {
                 let root = try JSONDecoder().decode(User.RootResponse.self, from: data)
-                // 6) RawUser → User map’le
                 let users = root.results.map { raw in
                     User(
                         id: raw.login.uuid,

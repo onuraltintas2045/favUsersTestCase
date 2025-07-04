@@ -14,7 +14,6 @@ struct UserDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // Profil resmi
                 AsyncImage(url: URL(string: user.profileImageURL)) { img in
                     img.resizable().scaledToFit()
                 } placeholder: {
@@ -23,7 +22,6 @@ struct UserDetailView: View {
                 .frame(height: 250)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
 
-                // Kullanıcı bilgileri
                 Text(user.fullName).font(.largeTitle).bold()
                 Text(user.email).foregroundColor(.secondary)
                 Text("Age: \(user.age)")
@@ -32,7 +30,6 @@ struct UserDetailView: View {
                 Text("Gender: \(user.gender.capitalized)")
                 Text("Nationality: \(user.nationality)")
 
-                // Favori butonu
                 Button(action: {
                     viewModel.toggleFavorite(user)
                 }) {
