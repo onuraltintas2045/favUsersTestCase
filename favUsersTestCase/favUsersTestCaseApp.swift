@@ -10,21 +10,9 @@ import SwiftData
 
 @main
 struct favUsersTestCaseApp: App {
-    
-    
-    @StateObject private var repo: UserRepository
-
-    init() {
-        // .modelContainer değil, buradan context çekemeyeceğiniz için
-        // fallback olarak ModelContainer’ı manuel kurup repo’yu başlatmanız gerekir.
-        let container = try! ModelContainer(for: FavoriteUser.self)
-        _repo = StateObject(wrappedValue: UserRepository(context: container.mainContext))
-    }
-
     var body: some Scene {
         WindowGroup {
-            MainTabView()
-                .environmentObject(repo)
+            ContentView()
         }
         .modelContainer(for: FavoriteUser.self)
     }

@@ -6,3 +6,57 @@
 //
 
 import Foundation
+
+final class NetworkManager {
+    static let shared = NetworkManager()
+    private init() {}
+
+    /// RandomUser API’den kullanıcıları çek (escaping closure versiyonu)
+    /// - Parameters:
+    ///   - results: Kaç adet kayıt çekilecek (default: 2)
+    ///   - nationalities: Ülke kodları (default: ["us","gb","ca"])
+    ///   - completion: Başarıda [User], başarısızlıkta Error döner
+    func fetchUsers(results: Int, nationalities: [String], completion: @escaping (Result<[User], Error>) -> Void) {
+        // 1) URL oluştur
+        let natParam = nationalities.joined(separator: ",")
+        guard let url = URL(string: "https://randomuser.me/api/?results=\(results)&nat=\(natParam)") else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+
+        // 2) Data task ile network isteği
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            // 3) Öncelikle network hatası var mı?
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            // 5) Data varsa decode et
+            guard let data = data else {
+                completion(.failure(URLError(.zeroByteResource)))
+                return
+            }
+            do {
+                let root = try JSONDecoder().decode(User.RootResponse.self, from: data)
+                // 6) RawUser → User map’le
+                let users = root.results.map { raw in
+                    User(
+                        id: raw.login.uuid,
+                        fullName: "\(raw.name.first) \(raw.name.last)",
+                        email: raw.email,
+                        age: raw.dob.age,
+                        phone: raw.phone,
+                        location: "\(raw.location.city), \(raw.location.state), \(raw.location.country)",
+                        profileImageURL: raw.picture.medium,
+                        gender: raw.gender,
+                        nationality: raw.nat
+                    )
+                }
+                completion(.success(users))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        .resume()
+    }
+}

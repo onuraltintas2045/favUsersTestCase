@@ -8,10 +8,21 @@
 import SwiftUI
 
 struct UserListView: View {
-    
-    @StateObject var viewModel: UserListViewModel
-    
+    @ObservedObject var viewModel: MainTabViewModel
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            List(viewModel.users) { user in
+                NavigationLink {
+                    UserDetailView(user: user, viewModel: viewModel)
+                } label: {
+                    UserCardView(user: user, viewModel: viewModel)
+                }
+            }
+            .navigationTitle("Users")
+            .onAppear {
+                viewModel.fetchUsers()
+            }
+        }
     }
 }

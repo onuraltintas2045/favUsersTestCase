@@ -20,41 +20,15 @@ final class FavoriteUser: Identifiable {
     var gender: String
     var nationality: String
 
-    init(
-        id: String,
-        fullName: String,
-        email: String,
-        age: Int,
-        phone: String,
-        location: String,
-        profileImageURL: String,
-        gender: String,
-        nationality: String
-    ) {
-        self.id = id
-        self.fullName = fullName
-        self.email = email
-        self.age = age
-        self.phone = phone
-        self.location = location
-        self.profileImageURL = profileImageURL
-        self.gender = gender
-        self.nationality = nationality
-    }
-}
-
-extension FavoriteUser {
-    convenience init(from user: User) {
-        self.init(
-            id: user.id,
-            fullName: user.fullName,
-            email: user.email,
-            age: user.age,
-            phone: user.phone,
-            location: user.location,
-            profileImageURL: user.profileImageURL,
-            gender: user.gender,
-            nationality: user.nationality
-        )
+    init(from user: User) {
+        self.id = user.id
+        self.fullName = user.fullName
+        self.email = user.email
+        self.age = user.age
+        self.phone = user.phone
+        self.location = user.location
+        self.profileImageURL = user.profileImageURL
+        self.gender = user.gender
+        self.nationality = user.nationality
     }
 }
