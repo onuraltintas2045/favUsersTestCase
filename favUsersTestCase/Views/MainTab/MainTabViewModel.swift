@@ -13,6 +13,7 @@ class MainTabViewModel: ObservableObject {
     @Published var users: [User] = []
     @Published var favoriteUsers: [FavoriteUser] = []
 
+
     private let repository: UserRepository
 
     init(repository: UserRepository) {
@@ -49,5 +50,41 @@ class MainTabViewModel: ObservableObject {
 
     func loadFavorites() {
         favoriteUsers = repository.fetchFavorites()
+    }
+    
+    func filteredUsers(searchText: String) -> [User] {
+        if searchText.isEmpty {
+            return users
+        } else {
+            return users.filter {
+                $0.fullName.localizedCaseInsensitiveContains(searchText) ||
+                $0.email.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+
+    func filteredFavoriteUsers(searchText: String) -> [User] {
+        let favUsers = favoriteUsers.map { fav in
+            User(
+                id: fav.id,
+                fullName: fav.fullName,
+                email: fav.email,
+                age: fav.age,
+                phone: fav.phone,
+                location: fav.location,
+                profileImageURL: fav.profileImageURL,
+                gender: fav.gender,
+                nationality: fav.nationality
+            )
+        }
+
+        if searchText.isEmpty {
+            return favUsers
+        } else {
+            return favUsers.filter {
+                $0.fullName.localizedCaseInsensitiveContains(searchText) ||
+                $0.email.localizedCaseInsensitiveContains(searchText)
+            }
+        }
     }
 }

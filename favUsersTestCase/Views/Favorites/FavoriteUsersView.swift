@@ -9,22 +9,11 @@ import SwiftUI
 
 struct FavoritesView: View {
     @ObservedObject var viewModel: MainTabViewModel
+    @State private var searchText: String = ""
 
     var body: some View {
         NavigationStack {
-            List(viewModel.favoriteUsers.map { fav in
-                User(
-                    id: fav.id,
-                    fullName: fav.fullName,
-                    email: fav.email,
-                    age: 0, // Favorilerde yaş yoksa 0 yaz (veya SwiftData’ya ekle)
-                    phone: fav.phone,
-                    location: fav.location,
-                    profileImageURL: fav.profileImageURL,
-                    gender: fav.gender,
-                    nationality: fav.nationality
-                )
-            }) { user in
+            List(viewModel.filteredFavoriteUsers(searchText: searchText)) { user in
                 NavigationLink {
                     UserDetailView(user: user, viewModel: viewModel)
                 } label: {
@@ -32,6 +21,8 @@ struct FavoritesView: View {
                 }
             }
             .navigationTitle("Favorites")
+            .navigationBarTitleDisplayMode(.large) // Büyük başlık
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search by name or email")
         }
     }
 }

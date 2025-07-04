@@ -12,17 +12,15 @@ struct UserCardView: View {
     @ObservedObject var viewModel: MainTabViewModel
 
     var body: some View {
-        HStack(spacing: 12) {
-            // Profil fotoğrafı
+        HStack(spacing: 10) {
             AsyncImage(url: URL(string: user.profileImageURL)) { img in
                 img.resizable().scaledToFill()
             } placeholder: {
                 Color.gray.opacity(0.3)
             }
-            .frame(width: 50, height: 50)
+            .frame(width: 40, height: 40)
             .clipShape(Circle())
 
-            // Ad ve e-posta
             VStack(alignment: .leading, spacing: 4) {
                 Text(user.fullName)
                     .font(.headline)
@@ -33,7 +31,6 @@ struct UserCardView: View {
 
             Spacer()
 
-            // Favori butonu
             Button(action: {
                 viewModel.toggleFavorite(user)
             }) {
