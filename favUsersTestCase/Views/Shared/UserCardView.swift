@@ -9,17 +9,12 @@ import SwiftUI
 
 struct UserCardView: View {
     let user: User
-    @ObservedObject var viewModel: MainTabViewModel
+    @EnvironmentObject var viewModel: MainTabViewModel
 
     var body: some View {
         HStack(spacing: 10) {
-            AsyncImage(url: URL(string: user.profileImageURL)) { img in
-                img.resizable().scaledToFill()
-            } placeholder: {
-                Color.gray.opacity(0.3)
-            }
-            .frame(width: 40, height: 40)
-            .clipShape(Circle())
+            
+            UserProfileImageView(imageUrl: user.profileImageURL, imageSize: 40)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(user.fullName)

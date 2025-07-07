@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @ObservedObject var viewModel: MainTabViewModel
+    @EnvironmentObject var viewModel: MainTabViewModel
 
     var body: some View {
         TabView {
-            UserListView(viewModel: viewModel)
+            UserListView()
                 .tabItem { Label("Users", systemImage: "person.3") }
 
-            FavoritesView(viewModel: viewModel)
+            FavoritesView(viewModel: FavoriteUsersViewModel(mainViewModel: viewModel))
                 .tabItem { Label("Favorites", systemImage: "heart.fill") }
         }
     }

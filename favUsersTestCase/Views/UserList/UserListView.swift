@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct UserListView: View {
-    @ObservedObject var viewModel: MainTabViewModel
+    @EnvironmentObject var viewModel: MainTabViewModel
     @State private var searchText: String = ""
 
     var body: some View {
         NavigationStack {
             List(viewModel.filteredUsers(searchText: searchText)) { user in
                 NavigationLink {
-                    UserDetailView(user: user, viewModel: viewModel)
+                    UserDetailView(user: user)
                 } label: {
-                    UserCardView(user: user, viewModel: viewModel)
+                    UserCardView(user: user)
                 }
             }
             .listStyle(.plain)

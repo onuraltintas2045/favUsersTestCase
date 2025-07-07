@@ -9,18 +9,13 @@ import SwiftUI
 
 struct UserDetailView: View {
     let user: User
-    @ObservedObject var viewModel: MainTabViewModel
+    @EnvironmentObject var viewModel: MainTabViewModel
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                AsyncImage(url: URL(string: user.profileImageURL)) { img in
-                    img.resizable().scaledToFit()
-                } placeholder: {
-                    Color.gray.opacity(0.3)
-                }
-                .frame(height: 250)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                
+                UserProfileImageView(imageUrl: user.profileImageURL, imageSize: 200)
 
                 Text(user.fullName).font(.largeTitle).bold()
                 Text(user.email).foregroundColor(.secondary)
