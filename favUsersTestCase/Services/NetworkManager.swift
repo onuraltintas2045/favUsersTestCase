@@ -17,7 +17,6 @@ final class NetworkManager {
     ///   - nationalities: Ülke kodları (default: ["us","gb","ca"])
     ///   - completion: Başarıda [User], başarısızlıkta Error döner
     func fetchUsers(results: Int, nationalities: [String], completion: @escaping (Result<[User], Error>) -> Void) {
-        // 1) URL oluştur
         let natParam = nationalities.joined(separator: ",")
         guard let url = URL(string: "https://randomuser.me/api/?results=\(results)&nat=\(natParam)") else {
             completion(.failure(URLError(.badURL)))

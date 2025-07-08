@@ -19,5 +19,6 @@ struct MainTabView: View {
                 .tabItem { Label("Favorites", systemImage: "heart.fill") }
         }
         .loadingOverlay(viewModel.isLoading)
+        .errorAlert($viewModel.errorMessage)
     }
 }
