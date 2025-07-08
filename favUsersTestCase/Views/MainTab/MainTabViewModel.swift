@@ -26,7 +26,7 @@ class MainTabViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        NetworkManager.shared.fetchUsers(results: 15, nationalities: ["us", "gb", "ca"]) { [weak self] result in
+        NetworkManager.shared.fetchUsers(results: 150, nationalities: ["us", "gb", "ca"]) { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.isLoading = false

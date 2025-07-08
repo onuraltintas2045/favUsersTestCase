@@ -14,7 +14,7 @@ struct ContentView: View {
     var body: some View {
         let repository = UserRepository(context: modelContext)
         let viewModel = MainTabViewModel(repository: repository)
-        MainTabView()
+        MainTabView(viewModel: viewModel)
             .environmentObject(viewModel)
     }
 }

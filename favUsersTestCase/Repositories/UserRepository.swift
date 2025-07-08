@@ -22,6 +22,7 @@ enum UserRepositoryError: Error, LocalizedError {
     }
 }
 
+@MainActor
 class UserRepository {
     private let context: ModelContext
 
