@@ -19,13 +19,10 @@ struct UserProfileImageView: View {
                     .resizable()
                     .scaledToFit()
                     .foregroundColor(.gray.opacity(0.6))
-                    .frame(width: imageSize, height: imageSize)
                     .background(Color.gray.opacity(0.2))
-                    .clipShape(Circle())
             }
             .resizable()
             .scaledToFill()
             .frame(width: imageSize, height: imageSize)
-            .clipShape(Circle())
     }
 }
