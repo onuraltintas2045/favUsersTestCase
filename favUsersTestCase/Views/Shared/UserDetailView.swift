@@ -40,9 +40,7 @@ struct UserDetailView: View {
                 .padding(.horizontal)
 
                 Button(action: {
-                    withAnimation(.spring(response: 0.2, dampingFraction: 0.9)) {
-                        viewModel.toggleFavorite(user)
-                    }
+                    viewModel.toggleFavorite(user)
                 }) {
                     HStack(spacing: 8) {
                         Image(systemName: viewModel.isFavorite(user) ? "heart.fill" : "heart")

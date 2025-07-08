@@ -45,7 +45,6 @@ struct FavoritesView: View {
                                                     viewModel.toggleSelection(for: user)
                                                 }
                                         }
-
                                         NavigationLink {
                                             UserDetailView(user: user)
                                         } label: {
@@ -53,6 +52,8 @@ struct FavoritesView: View {
                                         }
                                     }
                                 }
+                                .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 8))
+                                .listRowSeparator(.hidden)
                             }
                         }
                     }
