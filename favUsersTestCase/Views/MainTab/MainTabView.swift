@@ -18,5 +18,6 @@ struct MainTabView: View {
             FavoritesView(viewModel: FavoriteUsersViewModel(mainViewModel: viewModel))
                 .tabItem { Label("Favorites", systemImage: "heart.fill") }
         }
+        .loadingOverlay(viewModel.isLoading)
     }
 }

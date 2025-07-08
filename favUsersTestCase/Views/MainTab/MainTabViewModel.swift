@@ -12,7 +12,7 @@ import SwiftUI
 class MainTabViewModel: ObservableObject {
     @Published var users: [User] = []
     @Published var favoriteUsers: [FavoriteUser] = []
-
+    @Published var isLoading: Bool = false
 
     private let repository: UserRepository
 
@@ -22,9 +22,13 @@ class MainTabViewModel: ObservableObject {
     }
 
     func fetchUsers() {
+        guard !isLoading else { return }
+        isLoading = true
+        
         NetworkManager.shared.fetchUsers(results: 15, nationalities: ["us", "gb", "ca"]) { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
+                self.isLoading = false
                 switch result {
                 case .success(let fetchedUsers):
                     self.users = fetchedUsers
@@ -34,14 +38,22 @@ class MainTabViewModel: ObservableObject {
             }
         }
     }
+    
+    func fetchUsersIfNeeded() {
+        if self.users.isEmpty {
+            fetchUsers()
+        }
+    }
 
     func toggleFavorite(_ user: User) {
+        isLoading = true
         if repository.isFavorite(user) {
             repository.removeFavorite(user)
         } else {
             repository.addFavorite(user)
         }
         loadFavorites()
+        self.isLoading = false
     }
 
     func isFavorite(_ user: User) -> Bool {

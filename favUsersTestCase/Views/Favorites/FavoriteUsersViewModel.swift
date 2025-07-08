@@ -11,6 +11,7 @@ import Foundation
 class FavoriteUsersViewModel: ObservableObject {
     @Published var selectedUserIDs: Set<String> = []
     @Published var selectionMode: Bool = false
+    @Published var searchText: String = ""
 
     private let mainViewModel: MainTabViewModel
 
@@ -22,7 +23,6 @@ class FavoriteUsersViewModel: ObservableObject {
         mainViewModel.filteredFavoriteUsers(searchText: searchText)
     }
 
-    @Published var searchText: String = ""
 
     func toggleSelectionMode() {
         selectionMode.toggle()

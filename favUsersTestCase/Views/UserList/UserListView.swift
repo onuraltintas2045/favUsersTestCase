@@ -13,24 +13,56 @@ struct UserListView: View {
 
     var body: some View {
         NavigationStack {
-            List(viewModel.filteredUsers(searchText: searchText)) { user in
-                NavigationLink {
-                    UserDetailView(user: user)
-                } label: {
-                    UserCardView(user: user)
+            Group {
+                if viewModel.users.isEmpty && !viewModel.isLoading {
+                    ScrollView {
+                        EmptyListView(
+                            message: "No users found.",
+                            systemImage: "person.crop.circle.badge.exclamationmark"
+                        )
+                        .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.6)
+                    }
+                } else {
+                    List {
+                        Section {
+                            if viewModel.filteredUsers(searchText: searchText).isEmpty && !viewModel.isLoading {
+                                VStack {
+                                    EmptyListView(
+                                        message: "No results found for your search.",
+                                        systemImage: "magnifyingglass"
+                                    )
+                                    .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.5)
+                                }
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
+                            } else {
+                                ForEach(viewModel.filteredUsers(searchText: searchText)) { user in
+                                    NavigationLink {
+                                        UserDetailView(user: user)
+                                    } label: {
+                                        UserCardView(user: user)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .listStyle(.plain)
+                    .scrollIndicators(.hidden)
+                    
                 }
             }
-            .listStyle(.plain)
-            .navigationTitle("Users")
-            .navigationBarTitleDisplayMode(.large) // Büyük başlık
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search by name or email")
+            .searchable(
+                text: $searchText,
+                placement: .navigationBarDrawer(displayMode: .automatic),
+                prompt: "Search by name or email"
+            )
             .refreshable {
                 viewModel.fetchUsers()
             }
+            .navigationTitle("Users")
+            .navigationBarTitleDisplayMode(.large)
             .onAppear {
-                if viewModel.users.isEmpty {
-                    viewModel.fetchUsers()
-                }
+                viewModel.fetchUsersIfNeeded()
             }
         }
     }
