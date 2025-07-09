@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    
+
     // MARK: - Properties
     @ObservedObject var viewModel: FavoriteUsersViewModel
     @EnvironmentObject var mainTabViewModel: MainTabViewModel
+    @State private var searchText: String = ""
 
     // MARK: - Body
     var body: some View {
+        let filteredFavorites = mainTabViewModel.filteredFavoriteUsers(searchText: searchText)
         NavigationStack {
             Group {
                 if mainTabViewModel.favoriteUsers.isEmpty {
@@ -30,7 +32,7 @@ struct FavoritesView: View {
                     // MARK: - Favorites List
                     List {
                         Section {
-                            if viewModel.favoriteUsers.isEmpty {
+                            if filteredFavorites.isEmpty {
                                 // MARK: - Empty Search Result
                                 VStack {
                                     EmptyListView(
@@ -43,7 +45,7 @@ struct FavoritesView: View {
                                 .listRowSeparator(.hidden)
                             } else {
                                 // MARK: - Favorite User Rows
-                                ForEach(viewModel.favoriteUsers) { user in
+                                ForEach(filteredFavorites) { user in
                                     HStack {
                                         if viewModel.selectionMode {
                                             Image(systemName: viewModel.selectedUserIDs.contains(user.id) ? "checkmark.circle.fill" : "circle")
@@ -69,7 +71,7 @@ struct FavoritesView: View {
                 }
             }
             .searchable(
-                text: $viewModel.searchText,
+                text: $searchText,
                 placement: .navigationBarDrawer(displayMode: .automatic),
                 prompt: "Search by name or email"
             )
@@ -80,7 +82,7 @@ struct FavoritesView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     if viewModel.selectionMode {
                         Button("Select All") {
-                            viewModel.toggleSelectAll()
+                            viewModel.toggleSelectAll(users: filteredFavorites)
                         }
                     }
                 }
@@ -89,13 +91,14 @@ struct FavoritesView: View {
                     Button(viewModel.selectionMode ? "Done" : "Select") {
                         viewModel.toggleSelectionMode()
                     }
-                    .disabled(viewModel.favoriteUsers.isEmpty)
+                    .disabled(mainTabViewModel.favoriteUsers.isEmpty)
                 }
 
                 ToolbarItem(placement: .bottomBar) {
                     if viewModel.selectionMode {
                         Button(role: .destructive) {
-                            viewModel.removeSelected()
+                            mainTabViewModel.removeUsersFromFavorites(userIDs: viewModel.selectedUserIDs)
+                            viewModel.resetSelectionMode()
                         } label: {
                             HStack {
                                 Image(systemName: "heart.slash")

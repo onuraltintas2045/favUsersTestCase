@@ -32,3 +32,19 @@ final class FavoriteUser: Identifiable {
         self.nationality = user.nationality
     }
 }
+
+extension FavoriteUser {
+    func toUser() -> User {
+        User(
+            id: self.id,
+            fullName: self.fullName,
+            email: self.email,
+            age: self.age,
+            phone: self.phone,
+            location: self.location,
+            profileImageURL: self.profileImageURL,
+            gender: self.gender,
+            nationality: self.nationality
+        )
+    }
+}

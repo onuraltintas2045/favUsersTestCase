@@ -14,6 +14,7 @@ struct UserListView: View {
 
     // MARK: - Body
     var body: some View {
+        let filteredUsers = viewModel.filteredUsers(searchText: searchText)
         NavigationStack {
             Group {
                 if viewModel.users.isEmpty && !viewModel.isLoading {
@@ -29,7 +30,7 @@ struct UserListView: View {
                     // MARK: - User List
                     List {
                         Section {
-                            if viewModel.filteredUsers(searchText: searchText).isEmpty && !viewModel.isLoading {
+                            if filteredUsers.isEmpty && !viewModel.isLoading {
                                 // MARK: - Empty Search Result
                                 VStack {
                                     EmptyListView(
@@ -42,7 +43,7 @@ struct UserListView: View {
                                 .listRowSeparator(.hidden)
                             } else {
                                 // MARK: - User Rows
-                                ForEach(viewModel.filteredUsers(searchText: searchText)) { user in
+                                ForEach(filteredUsers) { user in
                                     NavigationLink {
                                         UserDetailView(user: user)
                                     } label: {

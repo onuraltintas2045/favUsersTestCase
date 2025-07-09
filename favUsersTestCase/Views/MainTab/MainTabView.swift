@@ -11,12 +11,7 @@ struct MainTabView: View {
     
     // MARK: - Properties
     @EnvironmentObject var viewModel: MainTabViewModel
-    @StateObject private var favoritesViewModel: FavoriteUsersViewModel
-
-    // MARK: - Initialization
-    init(viewModel: MainTabViewModel) {
-        _favoritesViewModel = StateObject(wrappedValue: FavoriteUsersViewModel(mainViewModel: viewModel))
-    }
+    @StateObject private var favoritesViewModel = FavoriteUsersViewModel()
 
     // MARK: - Body
     var body: some View {

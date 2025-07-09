@@ -92,6 +92,15 @@ class MainTabViewModel: ObservableObject {
             }
         }
     }
+    
+    func removeUsersFromFavorites(userIDs: Set<String>) {
+        for id in userIDs {
+            if let user = favoriteUsers.first(where: { $0.id == id }) {
+                toggleFavorite(user.toUser())
+            }
+        }
+        loadFavorites()
+    }
 
     // MARK: - Search Helpers
     func filteredFavoriteUsers(searchText: String) -> [User] {
