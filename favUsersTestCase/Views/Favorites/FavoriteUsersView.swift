@@ -8,13 +8,17 @@
 import SwiftUI
 
 struct FavoritesView: View {
+    
+    // MARK: - Properties
     @ObservedObject var viewModel: FavoriteUsersViewModel
     @EnvironmentObject var mainTabViewModel: MainTabViewModel
 
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             Group {
                 if mainTabViewModel.favoriteUsers.isEmpty {
+                    // MARK: - Empty State
                     ScrollView {
                         EmptyListView(
                             message: "No favorites yet.",
@@ -23,9 +27,11 @@ struct FavoritesView: View {
                         .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.6)
                     }
                 } else {
+                    // MARK: - Favorites List
                     List {
                         Section {
                             if viewModel.favoriteUsers.isEmpty {
+                                // MARK: - Empty Search Result
                                 VStack {
                                     EmptyListView(
                                         message: "No results found for your search.",
@@ -36,6 +42,7 @@ struct FavoritesView: View {
                                 .listRowInsets(EdgeInsets())
                                 .listRowSeparator(.hidden)
                             } else {
+                                // MARK: - Favorite User Rows
                                 ForEach(viewModel.favoriteUsers) { user in
                                     HStack {
                                         if viewModel.selectionMode {
@@ -69,6 +76,7 @@ struct FavoritesView: View {
             .navigationTitle("Favorites")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                // MARK: - Selection Management
                 ToolbarItem(placement: .navigationBarLeading) {
                     if viewModel.selectionMode {
                         Button("Select All") {
@@ -87,7 +95,7 @@ struct FavoritesView: View {
                 ToolbarItem(placement: .bottomBar) {
                     if viewModel.selectionMode {
                         Button(role: .destructive) {
-                            viewModel.removeSelectedFavorites()
+                            viewModel.removeSelected()
                         } label: {
                             HStack {
                                 Image(systemName: "heart.slash")

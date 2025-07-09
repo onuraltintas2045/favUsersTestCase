@@ -34,8 +34,8 @@ struct UserCardView: View {
             Button(action: {
                 viewModel.toggleFavorite(user)
             }) {
-                Image(systemName: viewModel.isFavorite(user) ? "heart.fill" : "heart")
-                    .foregroundStyle(viewModel.isFavorite(user) ? .red : .gray)
+                Image(systemName: viewModel.isFavoriteUser(user) ? "heart.fill" : "heart")
+                    .foregroundStyle(viewModel.isFavoriteUser(user) ? .red : .gray)
                     .font(.title3)
             }
             .buttonStyle(.plain)

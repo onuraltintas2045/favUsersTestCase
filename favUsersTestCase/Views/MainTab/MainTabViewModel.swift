@@ -9,24 +9,29 @@ import SwiftUI
 
 @MainActor
 class MainTabViewModel: ObservableObject {
+    
+    // MARK: - Published Properties
     @Published var users: [User] = []
     @Published var favoriteUsers: [FavoriteUser] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
 
+    // MARK: - Dependencies
     private let repository: UserRepository
 
+    // MARK: - Initialization
     init(repository: UserRepository) {
         self.repository = repository
         loadFavorites()
     }
 
+    // MARK: - User Fetching
     func fetchUsers() {
         guard !isLoading else { return }
         isLoading = true
         errorMessage = nil
 
-        NetworkManager.shared.fetchUsers(results: 150, nationalities: ["us", "gb", "ca"]) { [weak self] result in
+        NetworkManager.shared.fetchUsers(count: 30, countryCodes: ["us", "gb", "ca"]) { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.isLoading = false
@@ -34,7 +39,6 @@ class MainTabViewModel: ObservableObject {
                 case .success(let fetchedUsers):
                     self.users = fetchedUsers
                 case .failure(let error):
-                    print("❌ Network error: \(error.localizedDescription)")
                     self.errorMessage = "Failed to fetch users: \(error.localizedDescription)"
                 }
             }
@@ -47,20 +51,20 @@ class MainTabViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Favorites Management
     func toggleFavorite(_ user: User) {
         isLoading = true
         errorMessage = nil
 
         do {
-            if try repository.isFavorite(user) {
-                try repository.removeFavorite(user)
+            if try repository.isFavoriteUser(user) {
+                try repository.removeFromFavorites(user)
             } else {
-                try repository.addFavorite(user)
+                try repository.addToFavorites(user)
             }
             loadFavorites()
         } catch {
-            print("❌ Toggle favorite error: \(error.localizedDescription)")
-            self.errorMessage = error.localizedDescription
+            self.errorMessage = "Toggle favorite error: \(error.localizedDescription)"
         }
 
         isLoading = false
@@ -70,13 +74,12 @@ class MainTabViewModel: ObservableObject {
         do {
             self.favoriteUsers = try repository.fetchFavorites()
         } catch {
-            print("❌ Load favorites error: \(error.localizedDescription)")
-            self.errorMessage = error.localizedDescription
+            self.errorMessage = "Load favorites error: \(error.localizedDescription)"
         }
     }
 
-    func isFavorite(_ user: User) -> Bool {
-        (try? repository.isFavorite(user)) ?? false
+    func isFavoriteUser(_ user: User) -> Bool {
+        (try? repository.isFavoriteUser(user)) ?? false
     }
 
     func filteredUsers(searchText: String) -> [User] {
@@ -90,6 +93,7 @@ class MainTabViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Search Helpers
     func filteredFavoriteUsers(searchText: String) -> [User] {
         let favUsers = favoriteUsers.map { fav in
             User(

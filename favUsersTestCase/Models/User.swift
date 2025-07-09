@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - UI'da kullanılacak data modeli
+// MARK: - UI Model
 struct User: Identifiable, Equatable, Codable {
     let id: String
     let fullName: String
@@ -20,9 +20,10 @@ struct User: Identifiable, Equatable, Codable {
     let nationality: String
 }
 
-// MARK: - API'den gelen ham JSON karşılığı
+// MARK: - API Mapping
 extension User {
-    struct RawUser: Codable {
+    // MARK: - User Api Response Model
+    struct UserResponse: Codable {
         let gender: String
         let name: Name
         let location: Location
@@ -33,6 +34,7 @@ extension User {
         let nat: String
         let login: Login
 
+        // MARK: - Nested Models
         struct Name: Codable {
             let first: String
             let last: String
@@ -49,7 +51,7 @@ extension User {
         }
 
         struct Picture: Codable {
-            let medium: String
+            let large: String
         }
 
         struct Login: Codable {
@@ -57,9 +59,9 @@ extension User {
         }
     }
 
-    // MARK: - API root cevabı
-    struct RootResponse: Codable {
-        let results: [RawUser]
+    // MARK: - API Root Response
+    struct UserRootResponse: Codable {
+        let results: [UserResponse]
     }
 }
 

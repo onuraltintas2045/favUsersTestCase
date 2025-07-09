@@ -24,24 +24,26 @@ enum UserRepositoryError: Error, LocalizedError {
 
 @MainActor
 class UserRepository {
+    // MARK: - Properties
     private let context: ModelContext
 
+    // MARK: - Initialization
     init(context: ModelContext) {
         self.context = context
     }
 
-    func addFavorite(_ user: User) throws {
+    // MARK: - Favorites Management
+    func addToFavorites(_ user: User) throws {
         let fav = FavoriteUser(from: user)
         context.insert(fav)
         do {
             try context.save()
         } catch {
-            print("❌ Error saving favorite user: \(error)")
             throw UserRepositoryError.saveFailed
         }
     }
 
-    func removeFavorite(_ user: User) throws {
+    func removeFromFavorites(_ user: User) throws {
         let descriptor = FetchDescriptor<FavoriteUser>(
             predicate: #Predicate { $0.id == user.id }
         )
@@ -51,12 +53,11 @@ class UserRepository {
                 try context.save()
             }
         } catch {
-            print("❌ Error removing favorite user: \(error)")
             throw UserRepositoryError.deleteFailed
         }
     }
 
-    func isFavorite(_ user: User) throws -> Bool {
+    func isFavoriteUser(_ user: User) throws -> Bool {
         let descriptor = FetchDescriptor<FavoriteUser>(
             predicate: #Predicate { $0.id == user.id }
         )
@@ -64,7 +65,6 @@ class UserRepository {
             let results = try context.fetch(descriptor)
             return !results.isEmpty
         } catch {
-            print("❌ Error checking favorite status: \(error)")
             throw UserRepositoryError.fetchFailed
         }
     }
@@ -74,7 +74,6 @@ class UserRepository {
         do {
             return try context.fetch(descriptor)
         } catch {
-            print("❌ Error fetching favorite users: \(error)")
             throw UserRepositoryError.fetchFailed
         }
     }

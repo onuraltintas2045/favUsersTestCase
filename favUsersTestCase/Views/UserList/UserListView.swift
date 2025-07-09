@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct UserListView: View {
+    // MARK: - Properties
     @EnvironmentObject var viewModel: MainTabViewModel
     @State private var searchText: String = ""
 
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             Group {
                 if viewModel.users.isEmpty && !viewModel.isLoading {
+                    // MARK: - Empty State
                     ScrollView {
                         EmptyListView(
                             message: "No users found.",
@@ -23,9 +26,11 @@ struct UserListView: View {
                         .frame(maxWidth: .infinity, minHeight: UIScreen.main.bounds.height * 0.6)
                     }
                 } else {
+                    // MARK: - User List
                     List {
                         Section {
                             if viewModel.filteredUsers(searchText: searchText).isEmpty && !viewModel.isLoading {
+                                // MARK: - Empty Search Result
                                 VStack {
                                     EmptyListView(
                                         message: "No results found for your search.",
@@ -36,6 +41,7 @@ struct UserListView: View {
                                 .listRowInsets(EdgeInsets())
                                 .listRowSeparator(.hidden)
                             } else {
+                                // MARK: - User Rows
                                 ForEach(viewModel.filteredUsers(searchText: searchText)) { user in
                                     NavigationLink {
                                         UserDetailView(user: user)
@@ -50,7 +56,6 @@ struct UserListView: View {
                     }
                     .listStyle(.plain)
                     .scrollIndicators(.hidden)
-                    
                 }
             }
             .searchable(

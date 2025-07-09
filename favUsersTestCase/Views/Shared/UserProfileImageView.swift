@@ -22,7 +22,7 @@ struct UserProfileImageView: View {
                     .background(Color.gray.opacity(0.2))
             }
             .resizable()
-            .scaledToFill()
+            .scaledToFit()
             .frame(width: imageSize, height: imageSize)
     }
 }

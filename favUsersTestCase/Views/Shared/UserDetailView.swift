@@ -43,11 +43,11 @@ struct UserDetailView: View {
                     viewModel.toggleFavorite(user)
                 }) {
                     HStack(spacing: 8) {
-                        Image(systemName: viewModel.isFavorite(user) ? "heart.fill" : "heart")
+                        Image(systemName: viewModel.isFavoriteUser(user) ? "heart.fill" : "heart")
                             .font(.system(size: 24))
-                            .foregroundStyle(viewModel.isFavorite(user) ? .red : .gray)
+                            .foregroundStyle(viewModel.isFavoriteUser(user) ? .red : .gray)
                         
-                        Text(viewModel.isFavorite(user) ? "Remove Favorite" : "Add Favorite")
+                        Text(viewModel.isFavoriteUser(user) ? "Remove Favorite" : "Add Favorite")
                             .foregroundColor(.primary)
                             .bold()
                     }
